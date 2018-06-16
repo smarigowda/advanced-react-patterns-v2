@@ -10,6 +10,7 @@ import React from 'react'
 class Switch extends React.Component {
   render() {
     const {on, className = '', ...props} = this.props
+    // console.log(props);
     const btnClassName = [
       className,
       'toggle-btn',
