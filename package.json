@@ -18,6 +18,12 @@
   },
   "devDependencies": {
     "all-contributors-cli": "^4.11.1",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "cross-spawn": "^6.0.5",
     "husky": "^0.14.3",
     "inquirer": "^5.2.0",
@@ -40,7 +46,8 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/exercises-final/**/*.js", "src/exercises/**/*.js"
+      "src/exercises-final/**/*.js",
+      "src/exercises/**/*.js"
     ]
   },
   "eslintConfig": {
