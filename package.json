@@ -40,7 +40,7 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/exercises-final/**/*.js"
+      "src/exercises-final/**/*.js", "src/exercises/**/*.js"
     ]
   },
   "eslintConfig": {
