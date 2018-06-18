@@ -91,4 +91,4 @@ const extensions = {
   },
 }
 
-export {extensions}
+export { extensions }
