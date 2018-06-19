@@ -24,6 +24,11 @@ module.exports = wallaby => {
     hints: {
       ignoreCoverage: /ignore coverage/ // or /istanbul ignore next/, or any RegExp
     },
+    setup: wallaby => {
+      const jestConfig = require('./package.json').jest;
+      jestConfig.moduleNameMapper = { "\\.(css|less)$": "identity-obj-proxy" };
+      wallaby.testFramework.configure(jestConfig);
+    },
 
     testFramework: 'jest'
   };
