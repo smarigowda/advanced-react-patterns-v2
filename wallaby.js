@@ -2,6 +2,7 @@ module.exports = wallaby => {
   process.env.NODE_ENV = 'test';
   return {
     files: [
+      'src/exercises-final/*.+(js|jsx|json|snap|css|less|sass|scss|jpg|jpeg|gif|png|svg)',
       'src/exercises/*.+(js|jsx|json|snap|css|less|sass|scss|jpg|jpeg|gif|png|svg)',
       'src/switch.js',
       'src/switch.styles.css',
