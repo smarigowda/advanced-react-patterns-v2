@@ -46,7 +46,15 @@ function Usage({
         <div>
           <Switch on={on} {...togglerProps} />
           <hr />
-          <button aria-label="custom-button" {...togglerProps}>
+          <button
+              aria-label="custom-button"
+              {...togglerProps}
+              onClick={
+                (...args) => {
+                  togglerProps.onClick(...args);
+                  console.log('analytics')
+                }
+              }>
             {on ? 'on' : 'off'}
           </button>
         </div>
