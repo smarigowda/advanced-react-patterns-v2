@@ -7,6 +7,12 @@ import {Switch} from '../switch'
 // you'll need to provide a default value. Might I suggest
 // an object with default values for all the properties
 // of our render prop?
+const ToggleContext = React.createContext({
+  on: false,
+  toggle: () => {},
+  reset: () => {},
+  getTogglerProps: () => {}
+});
 
 const callAll = (...fns) => (...args) =>
   fns.forEach(fn => fn && fn(...args))
@@ -25,6 +31,24 @@ class Toggle extends React.Component {
   }
   // 🐨 Let's define another static property here called Consumer
   // so we don't have to expose the entire ToggleContext object.
+  static Consumer = ToggleContext.Consumer;
+
+  reset = () =>
+    this.internalSetState(
+      { ...this.initialState, type: Toggle.stateChangeTypes.reset },
+      () => this.props.onReset(this.getState().on),
+    )
+  toggle = ({ type = Toggle.stateChangeTypes.toggle } = {}) =>
+    this.internalSetState(
+      ({ on }) => ({ type, on: !on }),
+      () => this.props.onToggle(this.getState().on),
+    )
+  getTogglerProps = ({ onClick, ...props } = {}) => ({
+    onClick: callAll(onClick, () => this.toggle()),
+    'aria-expanded': this.getState().on,
+    ...props,
+  })
+
   initialState = {
     on: this.props.initialOn,
     // Ok, just trust me on this one... You're going to need to
@@ -38,6 +62,9 @@ class Toggle extends React.Component {
     // above this `initialState` assignments, and include them here
     //
     // 💰 `reset: this.reset` etc...
+    toggle: this.toggle,
+    reset: this.reset,
+    getTogglerProps: this.getTogglerProps,
   }
   state = this.initialState
   isControlled(prop) {
@@ -99,42 +126,24 @@ class Toggle extends React.Component {
         // call onStateChange with all the changes (including the type)
         this.props.onStateChange(
           allChanges,
-          this.getStateAndHelpers(),
+          this.state,
         )
         callback()
       },
     )
   }
-  reset = () =>
-    this.internalSetState(
-      {...this.initialState, type: Toggle.stateChangeTypes.reset},
-      () => this.props.onReset(this.getState().on),
-    )
-  toggle = ({type = Toggle.stateChangeTypes.toggle} = {}) =>
-    this.internalSetState(
-      ({on}) => ({type, on: !on}),
-      () => this.props.onToggle(this.getState().on),
-    )
-  getTogglerProps = ({onClick, ...props} = {}) => ({
-    onClick: callAll(onClick, () => this.toggle()),
-    'aria-expanded': this.getState().on,
-    ...props,
-  })
-  // 🐨 remove `getStateAndHelpers` because all of our state and helpers
-  // are available directly from `state` now.
-  getStateAndHelpers() {
-    return {
-      ...this.getState(),
-      toggle: this.toggle,
-      reset: this.reset,
-      getTogglerProps: this.getTogglerProps,
-    }
-  }
+
   render() {
     // Now we'll be exposing the state and helpers via React's context API.
     // 1) 🐨 replace this line with a usage of <ToggleContext.Provider> where
     // the value is `this.state` and the children is `this.props.children`.
-    return this.props.children(this.getStateAndHelpers())
+    
+    //return this.props.children(this.getStateAndHelpers())
+    return <ToggleContext.Provider value={this.state}>
+              {this.props.children}
+           </ToggleContext.Provider>
+
+
     // NOTE: this actually breaks the render prop API. We could preserve
     // it but I didn't want to add any more complexity to this.
     // 💯 Feel free to try to preserve the existing render prop API if you want.
